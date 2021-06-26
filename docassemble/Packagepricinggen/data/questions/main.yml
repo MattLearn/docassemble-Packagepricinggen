@@ -1,0 +1,179 @@
+metadata:
+  title: GoDigital Pricing Table
+  short title: Pricing Table
+  comment: A Calculator for package costs
+---
+mandatory: True
+code: |
+  subscription_length
+  ad_options
+  brand_options
+  marketing_options
+  commerce_options
+---
+question: How long is the subscription to our service?
+subquestion: |
+field: subscription_length
+choices:
+  - Monthly
+  - Annually
+---
+question: |
+  Choose your packages
+subquestion: |
+  Advertising and Lead Generation
+fields:
+  - no label: ad_options
+    datatype: checkboxes
+    choices:
+      - Landing Page Campaign
+      - Lead Ads Campaign
+      - Advertising Reach per 10,000
+---
+code: |
+  ad_count = int('0')
+  if ad_options['Landing Page Campaign']:
+    ad_count += int('500')
+    if subscription_length == "Monthly":
+      ad_count += int('4')*12
+    if subscription_length == "Annually":
+      ad_count += int('40')
+  if ad_options['Lead Ads Campaign']:
+    ad_count += int('250')
+  if ad_options['Advertising Reach per 10,000']:
+    ad_count += int('100')
+    if subscription_length == "Monthly":
+      ad_count += int('100')*12
+    if subscription_length == "Annually":
+      ad_count += int('1000')
+---
+question: |
+  Choose your packages
+subquestion: |
+  Branding
+fields:
+  - no label: brand_options
+    datatype: checkboxes
+    choices:
+      - Branding - Logo (logo makers)
+      - Branding - Logo (99 designs)
+      - Branding - Full Logo
+      - Branding - Definition(Lite)
+      - Branding - Definition
+---
+code: |
+  br_count = int('0')
+  if brand_options['Branding - Logo (logo makers)']:
+    br_count += int('200')
+  if brand_options['Branding - Logo (99 designs)']:
+    br_count += int('850')
+  if brand_options['Branding - Full Logo']:
+    br_count += int('2000')
+  if brand_options['Branding - Definition(Lite)']:
+    br_count += int('500')
+  if brand_options['Branding - Definition']:
+    br_count += int('2500')
+---
+question: |
+  Choose your packages
+subquestion: |
+  Web Presence and Marketing
+fields:
+  - no label: marketing_options
+    datatype: checkboxes
+    choices:
+      - Marketing Website
+      - Marketing Website(Lite)
+      - Content Strategy
+      - Content Marketing
+      - Email Marketing
+---
+code: |
+  mk_count = int('0')
+  if marketing_options['Marketing Website']:
+    mk_count += int('2500')
+    if subscription_length == "Monthly":
+      mk_count += int('45')*12
+    if subscription_length == "Annually":
+      mk_count += int('450')
+  if marketing_options['Marketing Website(Lite)']:
+    mk_count += int('1000')
+    if subscription_length == "Monthly":
+      mk_count += int('45')*12
+  if marketing_options['Content Strategy']:
+    mk_count += int('1000')
+  if marketing_options['Content Marketing']:
+    mk_count += int('1000')
+  if marketing_options['Email Marketing']:
+    mk_count += int('500')
+    if subscription_length == "Monthly":
+      mk_count += int('15')*12
+    if subscription_length == "Annually":
+      mk_count += int('180')
+---
+question: |
+  Choose your packages
+subquestion: |
+  Commerce
+fields:
+  - no label: commerce_options
+    datatype: checkboxes
+    choices:
+      - Payments
+      - Appointment Booking
+      - Food Ordering
+      - Food Ordering + POS
+      - Villa/Guest House Booking
+      - Online Delivery Platform
+      - Digital Loyalty Platform/Rewards
+---
+code: |
+  cm_count = int('0')
+  if commerce_options['Payments']:
+    cm_count += int('500')
+  if commerce_options['Appointment Booking']:
+    cm_count += int('250')
+    if subscription_length == "Monthly":
+      cm_count += int('15')*12
+  if commerce_options['Food Ordering']:
+    if subscription_length == "One-Time":
+      cm_count += int('500')
+    if subscription_length == "Monthly":
+      cm_count += int('42')*12
+    if subscription_length == "Annually":
+      cm_count += int('420')
+  if commerce_options['Food Ordering + POS']:
+    cm_count += int('2000')
+    if subscription_length == "Monthly":
+      cm_count += int('82')*12
+    if subscription_length == "Annually":
+      cm_count += int('820')
+  if commerce_options['Villa/Guest House Booking']:
+    cm_count += int('500')
+    if subscription_length == "Monthly":
+      cm_count += int('10')*12
+  if commerce_options['Online Delivery Platform']:
+    cm_count += int('500')
+    if subscription_length == "Monthly":
+      cm_count += int('29')*12
+    if subscription_length == "Annually":
+      cm_count += int('288')
+  if commerce_options['Digital Loyalty Platform/Rewards']:
+    cm_count += int('500')
+    if subscription_length == "Monthly":
+      cm_count += int('50')*12
+    if subscription_length == "Annually":
+      cm_count += int('500')
+  final_cost = cm_count+ad_count+mk_count+br_count
+---
+mandatory: True
+question: Total
+subquestion: |
+  The total cost of your package is ${currency(final_cost)}
+  
+   Package       |Total Cost
+  ---------------|----------------
+  Advertising and Lead Generation|${currency(ad_count)}
+  Branding|${currency(br_count)}
+  Web Presence/Marketing|${currency(mk_count)}
+  Commerce/Logistics|${currency(cm_count)}
